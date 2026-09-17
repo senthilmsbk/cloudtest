@@ -5,12 +5,12 @@ steps:
   - name: 'gcr.io/://google.com'
     entrypoint: 'gcloud'
     args:
-      - 'run'
-      - 'deploy'
-      - 'my-pipe-service'
-      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/springboot-app:$COMMIT_SHA'
-      - '--region=us-central1'
-      - '--allow-unauthenticated'
+        - 'run'
+        - 'deploy'
+        - 'my-service'
+        - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/springboot-app:$COMMIT_SHA'
+        - '--region=us-central1'
+        - '--allow-unauthenticated'
 images:
   - 'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA'
 options:
