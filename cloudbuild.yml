@@ -3,7 +3,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
-      - '-t',
+      - '-t'
       - 'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA'
       - '.'
   # step 2 push the docker image to Artifact Registry
