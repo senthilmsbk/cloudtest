@@ -1,8 +1,17 @@
 steps:
+  # step 1 build the docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA', '.']
-
-  # Step 2: Deploy the newly built image to Cloud Run (FIXED PATH AND IMAGE NAME)
+    args:
+      - 'build'
+      - '-t',
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA'
+      - '.'
+  # step 2 push the docker image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA'
+  # Step 3: Deploy the newly built image to Cloud Run (FIXED PATH AND IMAGE NAME)
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'gcloud'
     args:
