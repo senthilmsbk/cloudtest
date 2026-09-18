@@ -3,7 +3,7 @@ steps:
     args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA', '.']
 
   # Step 2: Deploy the newly built image to Cloud Run (FIXED PATH AND IMAGE NAME)
-  - name: 'gcr.io/://google.com'
+  - name: 'gcr.io/cloud-builders/dockerrun'
     entrypoint: 'gcloud'
     args:
       - 'run'
