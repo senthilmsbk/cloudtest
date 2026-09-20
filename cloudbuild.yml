@@ -21,14 +21,19 @@ steps:
       - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA'
       - '--region=us-central1'
       - '--allow-unauthenticated'
-  # Create Cloud Deploy release
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: [
-      'gcloud', 'deploy', 'releases', 'create', 'release-${COMMIT_SHA}',
-      '--delivery-pipeline=mytest',
-      '--region=us-central1',
-      '--images=myservice=us-central1-docker.pkg.dev/project-id/senthilmsbk/cloudtest/pipe-firstsample:${COMMIT_SHA}'
-    ]
+  # Step 4:Create Cloud Deploy pipeline release
+  - name : 'google/cloud-sdk:latest'
+    entrypoint: 'sh'
+    args:
+      - -xe
+      - -c
+      - |
+        gloud deploy apply --file=cloudtestpipeline.yml --region=us-central1
+        gcloud deploy apply --file=cloudtesttarget.yml --region=us-central1
+        gcloud deploy release create release-first-service-${COMMIT_SHA} \
+          --delivery-pipeline=myservice-pipeline \
+          --region=us-central1 \
+          --release-config=devrelease.yml \
 images:
   - 'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA'
 options:

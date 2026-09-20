@@ -1,0 +1,14 @@
+appversion: deploy.cloud.google.com/v1
+kind : DeliveryPipeline
+metadata:
+  name: myservice-pipeline
+  description: pipeline for cloud myservice
+serialPipeline:
+  stages:
+    - targetId: myservice-dev
+      profiles: [dev]
+    - targetId: myservice-stage
+      profiles: []
+      strategy:
+        standard:
+          verify: true

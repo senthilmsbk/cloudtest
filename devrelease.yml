@@ -1,0 +1,8 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: Release
+metadata:
+  name: release-first-service-${COMMIT_SHA}
+deliveryPipeline: myservice-pipeline
+targetId: staging
+images:
+  myservice: us-central1-docker.pkg.dev/my-project/my-service:${COMMIT_SHA}
