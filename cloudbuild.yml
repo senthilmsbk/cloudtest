@@ -28,7 +28,7 @@ steps:
       - -xe
       - -c
       - |
-        gloud deploy apply --file=cloudtestpipeline.yml --region=us-central1
+        gcloud deploy apply --file=cloudtestpipeline.yml --region=us-central1
         gcloud deploy apply --file=cloudtesttarget.yml --region=us-central1
         gcloud deploy release create release-first-service-${COMMIT_SHA} \
           --delivery-pipeline=myservice-pipeline \
