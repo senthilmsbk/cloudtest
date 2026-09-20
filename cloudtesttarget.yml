@@ -4,7 +4,7 @@ metadata:
   name: dev
   description: target for dev environment
   run:
-    location : prjects/$PROJECT_ID/locations/us-central1/services/myservice-dev
+    location: projects/$PROJECT_ID/locations/us-central1/services/myservice-dev
 ---
 apiVersion:   deploy.cloud.google.com/v1
 kind: Target
@@ -12,4 +12,4 @@ metadata:
     name: stage
     description: target for stage environment
     run:
-      location : projects/$PROJECT_ID/locations/us-central1/services/myservice-stage
+      location: projects/$PROJECT_ID/locations/us-central1/services/myservice-stage
