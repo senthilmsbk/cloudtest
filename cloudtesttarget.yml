@@ -1,4 +1,4 @@
-appversion:   deploy.cloud.google.com/v1
+apiVersion:   deploy.cloud.google.com/v1
 kind: Target
 metadata:
   name: dev
@@ -6,7 +6,7 @@ metadata:
   run:
     location : prjects/$PROJECT_ID/locations/us-central1/services/myservice-dev
 ---
-appversion:   deploy.cloud.google.com/v1
+apiVersion:   deploy.cloud.google.com/v1
 kind: Target
 metadata:
     name: stage
