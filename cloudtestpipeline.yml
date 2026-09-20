@@ -8,7 +8,7 @@ serialPipeline:
     - targetId: myservice-dev
       profiles: [dev]
     - targetId: myservice-stage
-      profiles: []
+      profiles: [stage]
       strategy:
         standard:
           verify: true

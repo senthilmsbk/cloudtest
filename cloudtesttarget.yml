@@ -1,17 +1,15 @@
-apiVersion:   deploy.cloud.google.com/v1
+apiVersion: deploy.cloud.google.com/v1
 kind: Target
 metadata:
   name: dev
-  description: target for dev environment
-  config:
-    run:
-      location: projects/$PROJECT_ID/locations/us-central1/services/myservice-dev
+description: "Target for dev environment"
+run:
+  location: projects/$PROJECT_ID/locations/us-central1/services/myservice-dev
 ---
-apiVersion:   deploy.cloud.google.com/v1
+apiVersion: deploy.cloud.google.com/v1
 kind: Target
 metadata:
-    name: stage
-    description: target for stage environment
-    config:
-      run:
-        location: projects/$PROJECT_ID/locations/us-central1/services/myservice-stage
+  name: stage
+description: "Target for stage environment"
+run:
+  location: projects/$PROJECT_ID/locations/us-central1/services/myservice-stage
