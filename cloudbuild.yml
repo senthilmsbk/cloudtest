@@ -38,6 +38,6 @@ steps:
           --region=us-central1 \
           --release-config=devrelease.yml \
 images:
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA'
+  - 'us-central1-docker.pkg.dev/c2a841a1-54e5-42c1-823/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA'
 options:
   logging: CLOUD_LOGGING_ONLY
