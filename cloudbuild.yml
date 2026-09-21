@@ -1,29 +1,52 @@
 steps:
-  # step 1 build the docker image
+  # Step 1: Build and push image with both :latest and commit SHA
   - name: 'gcr.io/cloud-builders/docker'
     args:
-      - 'build'
-      - '-t'
-      - 'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA'
-      - '.'
-  # step 2 push the docker image to Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'push'
-      - 'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA'
-  # Step 3: Deploy the newly built image to Cloud Run (FIXED PATH AND IMAGE NAME)
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'gcloud'
-    args:
-      - 'run'
-      - 'deploy'
-      - 'my-service'
-      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA'
-      - '--region=us-central1'
-      - '--allow-unauthenticated'
+      [
+        'build',
+        '-t',
+        'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/myservice:latest',
+        '-t',
+        'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/myservice:$COMMIT_SHA',
+        '.'
+      ]
 
-  # Step 4:Create Cloud Deploy pipeline release
-  - name : 'google/cloud-sdk:latest'
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'push',
+        'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/myservice:latest'
+      ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'push',
+        'us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/myservice:$COMMIT_SHA'
+      ]
+
+  # Step 2: Ensure Cloud Run services exist (create if missing)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        set -e
+        for svc in myservice-dev myservice-stage; do
+          if ! gcloud run services describe $svc --region us-central1 --project $PROJECT_ID >/dev/null 2>&1; then
+            echo "Creating Cloud Run service $svc..."
+            gcloud run deploy $svc \
+              --image=us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/myservice:latest \
+              --region=us-central1 \
+              --platform managed \
+              --allow-unauthenticated
+          else
+            echo "Service $svc already exists."
+          fi
+        done
+
+  # Step 3: Apply Cloud Deploy pipeline and targets
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
     entrypoint: 'sh'
     args:
       - -xe
@@ -31,13 +54,16 @@ steps:
       - |
         gcloud deploy apply --file=cloudtestpipeline.yml --region=us-central1
         gcloud deploy apply --file=cloudtesttarget.yml --region=us-central1
-        gcloud run deploy myservice-dev --image=gcr.io/my-project/my-image --region=us-central1
-        gcloud run deploy myservice-stage --image=gcr.io/my-project/my-image --region=us-central1
-        gcloud deploy release create release-first-service-${COMMIT_SHA} \
+
+  # Step 4: Create a Cloud Deploy release using commit SHA
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+    entrypoint: 'sh'
+    args:
+      - -xe
+      - -c
+      - |
+        gcloud deploy releases create release-first-service-${COMMIT_SHA} \
           --delivery-pipeline=myservice-pipeline \
           --region=us-central1 \
-          --release-config=devrelease.yml \
-images:
-  - 'us-central1-docker.pkg.dev/c2a841a1-54e5-42c1-823/senthilmsbk/cloudtest/pipe-firstsample:$COMMIT_SHA'
-options:
-  logging: CLOUD_LOGGING_ONLY
+          --images=myservice=us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/myservice:$COMMIT_SHA \
+          --release-config=devrelease.yml
