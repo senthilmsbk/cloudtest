@@ -67,3 +67,5 @@ steps:
           --region=us-central1 \
           --images=myservice=us-central1-docker.pkg.dev/$PROJECT_ID/senthilmsbk/myservice:$COMMIT_SHA \
           --release-config=devrelease.yml
+options:
+  logging: CLOUD_LOGGING_ONLY
